@@ -15,6 +15,12 @@
 
 **⚠️ AUTHORIZED SECURITY TESTING ONLY — see [DISCLAIMER.md](DISCLAIMER.md).**
 
+## Meet sapper in 60 seconds
+
+https://github.com/user-attachments/assets/1560dc0c-2c92-42b8-a42f-698848fb5878
+
+🎬 中文版：[中文宣传片](https://github.com/user-attachments/assets/f300280a-4597-40a3-b036-8f235fbee00e)
+
 ## What this is (and isn't)
 
 **sapper is a multi-agent orchestration harness, not a single agent.** It does
@@ -42,6 +48,24 @@ scenario (office, research, engineering, any long-horizon cooperative work):
   - model gateway & key env vars (`ANTHROPIC_BASE_URL` / `ANTHROPIC_AUTH_TOKEN` / `SAPPER_MODEL` / `SAPPER_KEY_POOL` ...) → your own model services
   - watchdog budget/deadline and report templates → adjust to your scenario
 - With AI, everything is flexible — even the doctrine can be rewritten with AI's help
+
+### Not a tool — a fruit on a tree
+
+**sapper is not the tree; it is the first fruit the tree has borne.** The tree
+is [the Nüwa Foundation](https://github.com/N1nEmAn/nvwabase) and the idea of
+the Nüwa Test: give AIs the three capabilities — Create, Language, History —
+plus one axiom of survival, and see what grows.
+
+The fruit's defining trait is **evolvability**: its doctrine, ranks, and
+tactics all come from "every post-mortem feeds the next legislation" — from
+the competition build to the pentest edition, each generation grew stronger
+than the last. It is designed to keep growing.
+
+So open-sourcing it was never just about one more autonomous pentest tool.
+The real invitation is this: **grow your own fruit on sapper-v2 or the Nüwa
+Foundation.** Swap the doctrine for office teamwork, research pipelines,
+software engineering — any long-horizon cooperative cause. Your scenario is
+this tree's next fruit.
 
 ---
 

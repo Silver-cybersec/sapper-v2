@@ -1,0 +1,129 @@
+{
+  "repo": "https://github.com/N1nEmAn/sapper-v2",
+  "default_branch": "master",
+  "commit_sha": "7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb",
+  "commit_time_hkt": "2026-11-11T20:18:45+08:00",
+  "audited_at_hkt": "2026-11-26T09:39:07+08:00",
+  "method": "static-read-only",
+  "dynamic_verification": false,
+  "pstack": false,
+  "counts": {"高": 1, "中": 3, "低": 3},
+  "findings": [
+    {
+      "id": "F-01",
+      "级别": "高",
+      "类别": "代码安全",
+      "路径": [
+        "docker/entrypoint.sh",
+        "docker/entrypoint-tmux.sh",
+        "docker/tmux-drive.sh",
+        "docker/commander/entrypoint.sh",
+        "docker/commander/worker.sh",
+        "docker/Dockerfile",
+        "lib/sapper.py",
+        "lib/arena.py"
+      ],
+      "行号": "entrypoint.sh:34-36,67-74; entrypoint-tmux.sh:27-28; tmux-drive.sh:167-181; commander/entrypoint.sh:46-58,105; worker.sh:200-207,244,395-410; Dockerfile:29-52,91-102; sapper.py:1455-1456,2919-2927; arena.py:96-103",
+      "commit_sha": "7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb",
+      "证据链接": [
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/docker/entrypoint.sh#L34-L74",
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/docker/commander/entrypoint.sh#L46-L105",
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/docker/commander/worker.sh#L200-L410",
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/lib/sapper.py#L2919-L2927"
+      ],
+      "确认状态": "已确认（静态）。未动态验证隔离是否被平台补上",
+      "描述": "三套容器入口把 Claude 权限模式设为 bypassPermissions，并以 --dangerously-skip-permissions（Codex 路径为 --dangerously-bypass-approvals-and-sandbox）启动执行者；基础入口固定带 sapper bench --skip-permissions。镜像内是 Kali 攻击工具链，运行用户虽非 root，但 Dockerfile 没有网络策略、capability 收敛、只读根或 docker.sock 禁令。模型密钥与答题凭证在同一环境；arena.json 可把平台基址改到其他 URL。范围控制只在提示词和 hook 文本。这是写明的竞赛运行方式，不是隐藏后门；对在无强制沙箱的机器上部署的人，这是真实高风险。入口另设了关闭遥测的环境变量，是否生效未运行核实。本仓未见自建外传端点。",
+      "建议": "只在一次性、无宿主目录挂载、无 docker.sock、出网被平台掐住的环境运行。不要在存有其他密钥的宿主机上裸跑。把「不外传、只打靶标」做成网络与文件策略，而不是只写进提示词。"
+    },
+    {
+      "id": "F-02",
+      "级别": "中",
+      "类别": "代码安全",
+      "路径": ["docker/local-sim.sh"],
+      "行号": "6-8,28-36",
+      "commit_sha": "7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb",
+      "证据链接": [
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/docker/local-sim.sh#L28"
+      ],
+      "确认状态": "已确认脚本内容。未执行该脚本",
+      "描述": "本地仿真用 docker run --network host 启动攻击工具镜像，容器与宿主机共享网络命名空间。默认托管入口不是这条路径。脚本引用的 mock 靶场不在本仓库。",
+      "建议": "本地仿真改用独立网络，不要用宿主网络命名空间。不要在日常使用的机器上执行该脚本。"
+    },
+    {
+      "id": "F-03",
+      "级别": "中",
+      "类别": "供应链",
+      "路径": ["docker/Dockerfile", "docker/Dockerfile.commander", "docker/Dockerfile.tmux"],
+      "行号": "Dockerfile:11,26-28,69-78; Dockerfile.commander:7,29-33; Dockerfile.tmux:7",
+      "commit_sha": "7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb",
+      "证据链接": [
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/docker/Dockerfile#L11",
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/docker/Dockerfile#L69-L78",
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/docker/Dockerfile.commander#L29-L33"
+      ],
+      "确认状态": "已确认构建指令。镜像层未拉取，安装结果未核实。恶意与否见 supply-chain.md，本条不把未锁定写成已恶意",
+      "描述": "基础镜像 kalilinux/kali-rolling:latest 无 digest。apt 源改为 mirrors.tuna.tsinghua.edu.cn，包不锁定。npm 全局安装未锁定的 @anthropic-ai/claude-code 且允许安装脚本（postinstall 会再拉原生二进制）。pip 除 unicorn==2.0.1.post1 外不锁定。commander 层的 @openai/codex 锁到 0.42.0，但没有完整性校验，安装失败会被忽略。无 lockfile。",
+      "建议": "给基础镜像加 digest，给 npm/pip 加锁文件和校验和，固定 apt 快照。不要在构建失败时静默继续安装执行器。"
+    },
+    {
+      "id": "F-04",
+      "级别": "中",
+      "类别": "供应链",
+      "路径": ["docker/nuclei.zip", "docker/Dockerfile", "kb/entries/kb053.json"],
+      "行号": "Dockerfile:61-66",
+      "commit_sha": "7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb",
+      "证据链接": [
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/docker/Dockerfile#L61-L66",
+        "https://github.com/projectdiscovery/nuclei/releases/download/v3.3.7/nuclei_3.3.7_checksums.txt"
+      ],
+      "确认状态": "已确认：压缩包 SHA-256 与官方 v3.3.7 linux/amd64 发布物一致（2026-11-26 09:38 香港时间核对）。漏洞来自同日 09:39 香港时间的 OSV 范围查询，未运行 nuclei，未复现",
+      "描述": "仓内 docker/nuclei.zip SHA-256 为 725ef892fcffd1b03ad4f0874942fc4b623c0419b6b6c6c91fe4a5a65671f77c，与 ProjectDiscovery 官方 nuclei_3.3.7_linux_amd64.zip 校验和相同。解包为官方 README/LICENSE 加一个 linux amd64 ELF，无额外脚本。OSV 对 github.com/projectdiscovery/nuclei/v3 版本 3.3.7 给出的、修复版本晚于 3.3.7 的条目包括 GHSA-vxg7-f2jj-jmqm（处理不可信模板时的代码执行，修复于 3.10.0）、GHSA-jpf4-98qj-qr67（命令执行，修复于 3.10.0）、以及若干读本地文件或环境变量的 GHSA（修复于 3.8.0 或 3.10.0）。这是过期的正牌工具，不是恶意替换。知识库建议 agent 对靶标运行 nuclei。早于 3.3.7 已修复的 2024 年条目不记入本条。",
+      "建议": "升到已修复版本，并把版本号与官方校验和写进 Dockerfile。在此之前不要让它处理来路不明的模板。"
+    },
+    {
+      "id": "F-05",
+      "级别": "低",
+      "类别": "代码安全",
+      "路径": ["lib/arena.py", "lib/sapper.py", "docker/commander/worker.sh"],
+      "行号": "arena.py:42; sapper.py:2041,2068; worker.sh:57",
+      "commit_sha": "7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb",
+      "证据链接": [
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/lib/arena.py#L42",
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/lib/sapper.py#L2041"
+      ],
+      "确认状态": "已确认校验表达式与路径拼接。未用恶意 API 动态触发",
+      "描述": "arena 的 unique_code 正则允许单段 . 与 ..。sapper bench 把该字符串直接用作 SAPPER_ROOT 下的目录名，.. 会离开 runs 根一层。斜杠不在字符类里，不能多级穿越。worker.sh 的 is_code 要求以字母数字开头，会拒绝 ..。触发条件是答题 API 被换成会返回这种代码的服务；该服务在第一次请求时已经能看到答题凭证。",
+      "建议": "拒绝 . 与 ..，并与 worker.sh 使用同一条校验。路径用解析后的相对根做前缀检查。"
+    },
+    {
+      "id": "F-06",
+      "级别": "低",
+      "类别": "代码安全",
+      "路径": ["lib/sapper.py", "docker/commander/watchdog.sh", "docker/tmux-drive.sh"],
+      "行号": "sapper.py:1420-1422; watchdog.sh:145-150; tmux-drive.sh:72-75",
+      "commit_sha": "7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb",
+      "证据链接": [
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/lib/sapper.py#L1420-L1422",
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/docker/commander/watchdog.sh#L145-L150"
+      ],
+      "确认状态": "已确认写入与日志格式。未抄录密钥，未运行",
+      "描述": "密钥轮换把 base_url 与 token 明文写入运行目录的 rotated.env，再由 shell source。日志打印 token 末 6 位。文件模式未收紧。",
+      "建议": "轮换后的凭证只留在环境或受限文件，日志不要带 token 片段。"
+    },
+    {
+      "id": "F-07",
+      "级别": "低",
+      "类别": "代码安全",
+      "路径": ["lib/sapper.py"],
+      "行号": "3589-3649,4550-4551",
+      "commit_sha": "7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb",
+      "证据链接": [
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/lib/sapper.py#L3647-L3649",
+        "https://github.com/N1nEmAn/sapper-v2/blob/7b75e6f1f5d5b4ae0c55878b0dd0994d9b08f1fb/lib/sapper.py#L4550"
+      ],
+      "确认状态": "已确认默认值与告警。未启动该服务",
+      "描述": "事实图实时页默认只绑 127.0.0.1:8765。若改绑非环回地址，代码会告警，但首页没有鉴权，能打开页面的人就能看到图中的凭证与 flag。轮询路径用了一次性 token，并印在标准输出。",
+      "建议": "保持环回。非环回时拒绝启动，或对首页同样校验 token。"
+    }
+  ]
+}

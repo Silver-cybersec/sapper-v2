@@ -15,6 +15,12 @@
 
 **⚠️ 仅限授权安全测试用途——见 [DISCLAIMER.md](DISCLAIMER.md)。**
 
+## 60 秒认识 sapper
+
+https://github.com/user-attachments/assets/f300280a-4597-40a3-b036-8f235fbee00e
+
+🎬 英文版：[English intro](https://github.com/user-attachments/assets/1560dc0c-2c92-42b8-a42f-698848fb5878)
+
 ## 先说清楚：这是什么
 
 **sapper 是一个多 Agent 调度机制（harness），不是一个 Agent。** 它不绑定任何特定的 AI 模型或 CLI——你可以随意替换每个角色背后的 Agent 和模型：
@@ -35,6 +41,14 @@ sapper 的价值不在任何单个 Agent，而在**组织多个 Agent 协同作�
   - 模型网关与密钥环境变量（`ANTHROPIC_BASE_URL` / `ANTHROPIC_AUTH_TOKEN` / `SAPPER_MODEL` / `SAPPER_KEY_POOL`…）→ 换成你自己的模型服务
   - watchdog 的预算/死线、报告模板 → 按你的场景调整
 - 反正有 AI 嘛，可以灵活变化——改军规的军规也是让 AI 帮你写
+
+### 这不是一把工具，是一棵树上的一颗果实
+
+**sapper 不是那棵树——它是树上的第一颗果实。**树是 [女娲基座](https://github.com/N1nEmAn/nvwabase) 与女娲测试的思想：造人、语言、历史三能力打底，给 AI 一条生存公理，看它能长出什么。
+
+这颗果实最重要的性状是**可进化**：它的军规、编制与打法，全部来自「上一场战役的验尸，喂下一场的立法」——从比赛原版到渗透版，每一代都比上一代强。它被设计成可以一直长下去。
+
+所以开源它的意义，从来不只是多一把自主渗透工具。真正的邀请是：**在 sapper-v2 或女娲基座上，结出你自己的果实。**把军规换成办公协作、科研流水线、代码工程、任何长周期事业——你的场景，就是这棵树的下一颗果实。
 
 ---
 
